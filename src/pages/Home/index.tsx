@@ -1,8 +1,9 @@
+import CustomTheme from "../components/Theme";
+
 function Home() {
     return (
-        <div>
-            <h1>This is the home page</h1>
-        </div>
+        <CustomTheme title="Home page">
+        </CustomTheme>
     );
 }
 
