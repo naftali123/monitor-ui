@@ -22,7 +22,7 @@ export class Url {
         public frequency: number,
         public activityHistory: ActivityHistory[]
     ) {
-        this.appId = uuid.slice(0, 4) + this.label;
+        this.appId = uuid.slice(0, 4) + this.label.trim().replaceAll(' ', '-').toLowerCase();
     };
 
     static fromJson(json: any): Url {

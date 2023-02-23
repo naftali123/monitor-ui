@@ -141,7 +141,8 @@ function FormDialog() {
   );
 }
 
-function MonitorChart({ ref }: any) {
+// function MonitorChart({ ref }: any) {
+function MonitorChart() {
   const syncId = useMemo(()=> Math.random().toString(36).substring(2),[]);
   const subscriptions: Url[] = useSelector((state: RootState) => state.monitor.subscriptions);
 
@@ -158,7 +159,7 @@ function MonitorChart({ ref }: any) {
 
   return (
     <div
-    ref={ref}
+    // ref={ref}
     >
       <ScrollSpy>
       { subscriptions.map((url: Url) => {
@@ -232,7 +233,7 @@ function MonitorList() {
   );
 }
 function Monitor() {
-  const parentScrollContainerRef = useRef<HTMLDivElement | null>(null);
+  // const parentScrollContainerRef = useRef<HTMLDivElement | null>(null);
 
   const dispatch = useAppDispatch();
   const status = useSelector((state: RootState) => state.monitor.status);
@@ -256,7 +257,9 @@ function Monitor() {
           </Grid>
 
         </Grid>
-        <MonitorChart ref={parentScrollContainerRef}/>
+        <MonitorChart 
+        // ref={parentScrollContainerRef}
+        />
       </CustomTheme>
   );
 }
