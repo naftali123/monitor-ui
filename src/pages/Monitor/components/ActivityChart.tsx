@@ -1,23 +1,22 @@
 import { useMemo } from 'react';
-import { 
+import {
   AreaChart,
   Area,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
-  ResponsiveContainer 
+  ResponsiveContainer
 } from 'recharts';
 import { useGetActivitiesQuery } from '../state/websocket';
-import { ActivityHistory } from '../types';
 
-export type ActivityChartProps = {
+type ActivityChartProps = {
   label: string;
   syncId?: string;
 }
 
-export function ActivityChart({ label, syncId }: ActivityChartProps){
-  syncId = useMemo(()=> syncId ?? Math.random().toString(36).substring(2),[]);
+export function ActivityChart({ label, syncId }: ActivityChartProps) {
+  syncId = useMemo(() => syncId ?? Math.random().toString(36).substring(2), []);
   const {
     data,
     // isLoading,
@@ -25,15 +24,21 @@ export function ActivityChart({ label, syncId }: ActivityChartProps){
     // isError,
     // error
   } = useGetActivitiesQuery(label);
-  if(!data) return null;
-  // const { entities } = data;
-  // const t = entities.map((a: ActivityHistory) => a);
-  return ( 
+  if (!data)
+    return null;
+  return (
     <ResponsiveContainer width="100%" height={200}>
       <AreaChart
         width={500}
         height={200}
-        data={ data }
+        data={data.map((activity: any) => {
+          return {
+            date: new Date(activity.date).toLocaleTimeString(),
+            responseTime: activity.responseTime,
+            pv: activity.date,
+            amt: activity.info
+          };
+        })}
         syncId={syncId}
         margin={{
           top: 10,
