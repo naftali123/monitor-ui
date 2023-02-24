@@ -5,18 +5,16 @@ import Box from '@mui/material/Box/Box';
 import { addUrl } from '../state/monitorSlice';
 import { useAppDispatch } from '../../../app/hooks';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid } from '@mui/material';
-import { ControllerWrapper } from "./ControllerWrapper";
+import { TextFieldControllerWrapper } from "./TextFieldControllerWrapper";
+import { MonitorUrlRequest } from "../types";
+import TagsArray from "./TagsInput";
+import { FormProps } from "./FormProps";
 
-interface FormProps {
-  title: string;
-  open: boolean;
-  onClose: () => void;
-}
-
-const schema = yup.object({
+const schema: yup.Schema<MonitorUrlRequest> = yup.object({
   url: yup.string().required(),
   label: yup.string().required(),
-  frequency: yup.number(),
+  frequency: yup.number().required(),
+  tags: yup.array().of(yup.string().required())
 });
 
 export function MonitorForm({ onClose, open, title }: FormProps) {
@@ -25,6 +23,7 @@ export function MonitorForm({ onClose, open, title }: FormProps) {
   const {
     control, handleSubmit, reset,
     // register, 
+    clearErrors,
     // watch, 
     formState: { errors, isValid }
   } = useForm({
@@ -32,21 +31,16 @@ export function MonitorForm({ onClose, open, title }: FormProps) {
     resolver: yupResolver(schema)
   });
 
-  const onSubmit = (data: FieldValues
-    // event: React.FormEvent<HTMLFormElement>
-  ) => {
-    if (!isValid)
-      return;
-    // event.preventDefault();
-    const { url, label, frequency } = data;
-    dispatch(addUrl({ url, label, frequency }));
+  const onSubmit = (data: FieldValues) => {
+    if (!isValid) return;
+    dispatch(addUrl({...data as MonitorUrlRequest}));
     handleClose();
-    // clear the form
-    reset({ url: '', label: '', frequency: 0 });
   };
 
   const handleClose = () => {
     onClose();
+    clearErrors();
+    reset({ url: '', label: '', frequency: 0 });
   };
 
   return (
@@ -56,31 +50,40 @@ export function MonitorForm({ onClose, open, title }: FormProps) {
         <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 3 }}>
           <Grid container spacing={2} maxWidth={"sm"}>
             <Grid item xs={12} sm={12}>
-              <ControllerWrapper
+              <TextFieldControllerWrapper
+                required
                 name="url"
                 control={control}
                 errors={errors} />
             </Grid>
             <Grid item xs={12} sm={10}>
-              <ControllerWrapper
+              <TextFieldControllerWrapper
+                required
                 name="label"
                 control={control}
                 errors={errors} />
             </Grid>
             <Grid item xs={4} sm={2}>
-              <ControllerWrapper
+              <TextFieldControllerWrapper
+                required
                 name="frequency"
                 control={control}
                 errors={errors} />
             </Grid>
+            <Grid item xs={12} sm={12}>
+              <TagsArray
+                name="tags"
+                control={control}
+                errors={errors}
+              />
+            </Grid>
           </Grid>
-          <Button variant="contained" type="submit">Save</Button>
+          <DialogActions>
+              <Button variant="contained" type="submit">Save</Button>
+              <Button onClick={handleClose} autoFocus>Cancel</Button>
+          </DialogActions>
         </Box>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose} autoFocus>Cancel</Button>
-      </DialogActions>
     </Dialog>
-
   );
 }

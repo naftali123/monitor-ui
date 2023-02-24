@@ -5,14 +5,20 @@ export class MonitorAPI {
   
   constructor(public monitorServer: string) {}
 
-  async addUrl(url: MonitorUrlRequest): Promise<(Url | string)> {
-    const response = await axios({
-      url: `${this.monitorServer}/monitor/url`,
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      data: url,
-    });
-    return (await response.data);
+  async addUrl(url: MonitorUrlRequest): Promise<(Url | string | string[])> {
+    try {
+      const response = await axios({
+        url: `${this.monitorServer}/monitor/url`,
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        data: url,
+      });
+      return (await response.data);
+    } catch (error: any | unknown) {
+      throw new Error(JSON.stringify(error.response.data.message));
+      /// error.response.data.message || [];
+      // return error.response.data.message || [];
+    }
   }
 
   async addUrlList(urls: MonitorUrlRequest[]): Promise<(Url | string)[]> {

@@ -1,36 +1,37 @@
-import { TextField } from "@mui/material";
+import { TextField, TextFieldProps } from "@mui/material";
 import { Control, Controller, FieldErrors, RegisterOptions } from "react-hook-form";
+import { InputErrorMessage } from "./InputErrorMessage";
+import { upFirstLetter } from "./utils";
 
-export const upFirstLetter = (text: string) => text.split("").map((e, i)=>i===0 ? e.toUpperCase() : e).join("");
-
-type BasicControllerWrapperProps = {
+export type BasicControllerWrapperProps = {
     control?: Control<any>,
     rules?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>,
-    errors?: FieldErrors
+    errors?: FieldErrors,
+    required?: boolean
 }
 
-export interface ControllerWrapperProps extends BasicControllerWrapperProps {
+export interface TextFieldControllerWrapperProps extends BasicControllerWrapperProps {
     name: string,
+    textFieldProps?: TextFieldProps
 }
 
-export function ControllerWrapper({ name, control, rules, errors }: ControllerWrapperProps) {
+export function TextFieldControllerWrapper({ name, control, rules, errors, textFieldProps, required }: TextFieldControllerWrapperProps) {
     const errorFieldExists: boolean = Object.keys(errors ?? {}).includes(name);
-    let errorMsg: string = errors && errorFieldExists
-        ? errors[name]?.message as string : '';
     return <Controller
         name={name}
         control={control}
         rules={rules}
         render={({ field }) => <><TextField
-            {...field}
+            {...textFieldProps ?? {}}
+            {...field ?? {}}
             error={errorFieldExists ? !!(errors![name]) : false}
-            required
+            required={required ?? false}
             fullWidth
             name={name}
             label={upFirstLetter(name)}
             type={name}
             id={name}
             autoComplete={name} />
-            {errorMsg !== '' && <span style={{ color: 'red' }}>{errorMsg}</span>}
+            <InputErrorMessage name={name} errors={errors} />
         </>} />;
 }

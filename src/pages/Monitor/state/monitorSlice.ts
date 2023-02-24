@@ -16,11 +16,13 @@ import { MonitorAPI } from './monitorAPI';
 export interface CounterState {
   subscriptions: Url[];
   status: 'idle' | 'loading' | 'success' | 'failed';
+  serverErrorMessages: string[];
 }
 
 const initialState: CounterState = {
   subscriptions: [],
   status: 'idle',
+  serverErrorMessages: [],
 };
 
 export const monitorAPI = new MonitorAPI(`http://${MONITOR_DOMAIN}:${MONITOR_DOMAIN_DEFAULT_PORT}`);
@@ -93,8 +95,9 @@ export const monitorSlice = createSlice({
           console.error('Error getAllUrls: ', action.payload);
         }
       })
-      .addCase(getAllUrls.rejected, (state) => {
+      .addCase(getAllUrls.rejected, (state, action) => {
         state.status = 'failed';
+        // state.serverErrorMessages = [...state.serverErrorMessages, ...action.payload];
       })
       
       // addUrl
@@ -110,8 +113,9 @@ export const monitorSlice = createSlice({
           console.error('Error subscribing: ', action.payload);
         }
       })
-      .addCase(addUrl.rejected, (state) => {
+      .addCase(addUrl.rejected, (state, action) => {
         state.status = 'failed';
+        state.serverErrorMessages = JSON.parse(action.error.message ?? '[]') ?? [];
       })
       // addUrlList
       .addCase(addUrlList.pending, (state) => {

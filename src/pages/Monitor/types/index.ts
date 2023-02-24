@@ -2,6 +2,7 @@ export type MonitorUrlRequest = {
     url: string,
     label: string,
     frequency: number,
+    tags?: string[]
 }
 
 export type ActivityHistory = {
