@@ -23,7 +23,10 @@ export function MonitorChart() {
             <Box sx={{ mt: 3 }} key={url.appId} id={url.appId}>
               <Typography variant="h5">{url.label}</Typography>
               <Typography variant="subtitle1">{url.url}</Typography>
-              <ActivityChart syncId={syncId} label={url.label} />
+              <ActivityChart 
+                syncId={`${syncId}-${url.tags.join()}`} 
+                label={url.label} 
+              />
             </Box>
           );
         })}
