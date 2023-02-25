@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import {
-  AreaChart,
-  Area,
+  LineChart,
+  Line,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -28,15 +28,13 @@ export function ActivityChart({ label, syncId }: ActivityChartProps) {
     return null;
   return (
     <ResponsiveContainer width="100%" height={200}>
-      <AreaChart
+      <LineChart
         width={500}
         height={200}
         data={data.map((activity: any) => {
           return {
             date: new Date(activity.date).toLocaleTimeString(),
-            responseTime: activity.responseTime,
-            pv: activity.date,
-            amt: activity.info
+            time: activity.responseTime
           };
         })}
         syncId={syncId}
@@ -47,12 +45,21 @@ export function ActivityChart({ label, syncId }: ActivityChartProps) {
           bottom: 0,
         }}
       >
+        <defs>
+          <linearGradient id="colorUv" x1="1" y1="1" x2="0" y2="0">
+            <stop offset="0%" stopColor="green" stopOpacity={0.5} />
+            <stop offset="100%" stopColor="red" stopOpacity={0.5} />
+          </linearGradient>
+        </defs>
         <CartesianGrid strokeDasharray="4 4" />
         <XAxis dataKey="date" />
         <YAxis />
-        <Tooltip />
-        <Area type="monotone" dataKey="responseTime" stroke="#8884d8" fill="#8884d8" />
-      </AreaChart>
+        <Tooltip
+          labelStyle={{ color: 'black' }}
+          contentStyle={{ backgroundColor: 'white', color: 'black'}}
+        />
+        <Line strokeWidth={5} type="monotone" dataKey="time" stroke="url(#colorUv)" fill="#E8F5E9" />
+      </LineChart>
     </ResponsiveContainer>
   );
 }
