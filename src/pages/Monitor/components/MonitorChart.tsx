@@ -27,6 +27,7 @@ export function MonitorChart() {
                 <ActivityChart 
                   syncId={`${syncId}-${url.tags.join()}`} 
                   label={url.label} 
+                  frequency={url.frequency}
                 />
               </Box>
               <hr/>

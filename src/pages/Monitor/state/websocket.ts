@@ -20,14 +20,7 @@ export const api = createApi({
                     // wait for the initial query to resolve before proceeding
                     const { data, meta } = await cacheDataLoaded
                     // console.log('cacheDataLoaded:', data, meta);
-                    
-                    socket.emit('subscribeToTags', 'oracle', (response: any) =>{
-                        
-                        console.log('Identity:', response);
-                    });
-                    
                     socket.on('activityHistory.updated', (message) => {
-                        console.log('activityHistory.updated');
                         updateCachedData((draft) => { 
                             if(draft.length >= limit) draft.shift()
                             draft.push(message);
@@ -35,7 +28,6 @@ export const api = createApi({
                     });
 
                     socket.on('connect', () => {
-                        console.log(`socket.connected: ${socket.connected}`);
                         console.log('socket connected on rtk query');
                     });
                     socket.on('message', (message) => {
