@@ -62,7 +62,8 @@ export class MonitorAPI {
   }
 
   async getAllUrls(): Promise<(Url | string)[]> {
-    const response = await axios.get(`${this.monitorServer}/monitor/all-urls`);
+    const limit = 20;
+    const response = await axios.get(`${this.monitorServer}/monitor/all-urls/${limit}`);
     return (await response.data)
       .map(
         (url: any) => typeof url === 'string' 

@@ -7,11 +7,13 @@ import { MONITOR_DOMAIN, MONITOR_DOMAIN_DEFAULT_PORT } from './config'
 
 const domain: string = `${MONITOR_DOMAIN}:${MONITOR_DOMAIN_DEFAULT_PORT}`;
 
+const limit: number = 20;
+
 export const api = createApi({
     baseQuery: fetchBaseQuery({ baseUrl: `http://${domain}/monitor/urls/`}),
     endpoints: (build) => ({
         getActivities: build.query<ActivityHistory[], string>({
-            query: (label) => `activity-history/${label}`,
+            query: (label) => `activity-history/${label}/${limit}`,
             async onCacheEntryAdded(arg,{ updateCachedData, cacheDataLoaded, cacheEntryRemoved }) {
                 const socket = io(`http://${domain}`, {transports: ["websocket"]}).connect();
                 try {
@@ -27,6 +29,7 @@ export const api = createApi({
                     socket.on('activityHistory.updated', (message) => {
                         console.log('activityHistory.updated');
                         updateCachedData((draft) => { 
+                            if(draft.length >= limit) draft.shift()
                             draft.push(message);
                         });
                     });
