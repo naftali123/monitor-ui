@@ -16,7 +16,7 @@ export function MonitorList() {
       e.currentTarget.href.split("#")[1]
     );
     if (target) {
-      var headerOffset = 20;
+      var headerOffset = 80;
       var elementPosition = target.getBoundingClientRect().top;
       var offsetPosition = elementPosition - headerOffset;
 

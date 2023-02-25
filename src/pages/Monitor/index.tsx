@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from 'react-redux';
 import { getAllUrls } from './state/monitorSlice';
 import { useAppDispatch } from '../../app/hooks';
-import { Grid } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import CustomTheme from '../components/Theme';
 import { RootState } from "../../app/store";
 import { FormDialog } from "./components/FormDialog";
@@ -40,14 +40,20 @@ function Monitor() {
         sideBar={<MonitorList/>}
       >
         <Grid container spacing={2}>
-
-          <Grid item xs={4} sm={4}>
+          <Grid item xs={12} sm={12}>
+            <Typography variant="body1">
+              Motorized services health based on response time
+            </Typography>    
+          </Grid>
+          <Grid item xs={12} sm={12}>
             <FormDialog/>
           </Grid>
 
+          <Grid item xs={12} sm={12}>
+            <MonitorChart />
+          </Grid>
         </Grid>
-        <MonitorChart />
-        
+
         <ErrorModal 
           title={""} 
           open={errorModalOpen} 

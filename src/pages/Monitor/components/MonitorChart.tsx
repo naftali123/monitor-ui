@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from "react";
 import { useSelector } from 'react-redux';
 import Box from '@mui/material/Box/Box';
-import { Typography } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import { ActivityChart } from "./ActivityChart";
 import { RootState } from "../../../app/store";
 import { Url } from "../types";
@@ -20,14 +20,17 @@ export function MonitorChart() {
       <ScrollSpy>
         {subscriptions.map((url: Url) => {
           return (
-            <Box sx={{ mt: 3 }} key={url.appId} id={url.appId}>
-              <Typography variant="h5">{url.label}</Typography>
-              <Typography variant="subtitle1">{url.url}</Typography>
-              <ActivityChart 
-                syncId={`${syncId}-${url.tags.join()}`} 
-                label={url.label} 
-              />
-            </Box>
+            <Grid sx={{ mt: 3 }} key={url.appId} id={url.appId}>
+              <Box>
+                <Typography variant="h5">{url.label}</Typography>
+                <Typography variant="subtitle1">{url.url}</Typography>
+                <ActivityChart 
+                  syncId={`${syncId}-${url.tags.join()}`} 
+                  label={url.label} 
+                />
+              </Box>
+              <hr/>
+            </Grid>
           );
         })}
       </ScrollSpy>
