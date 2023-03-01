@@ -2,22 +2,33 @@ import { useEffect, useState } from "react";
 import { useSelector } from 'react-redux';
 import { getAllUrls } from './state/monitorSlice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { Grid, Typography } from '@mui/material';
+import { Grid, Typography, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 import CustomTheme from '../components/Theme';
 import { RootState } from "../../app/store";
-import { FormDialog } from "./components/From/FormDialog";
 import { MonitorChart } from "./components/Activity/ActivitiesChart";
 import { MonitorList } from "./components/MonitorList";
 import SideBar from "../components/SideBar";
 import { ErrorModal } from "../components/Modal/ErrorModal";
 import { LoadingModal } from "../components/Modal/LoadingModal";
+import { MonitorForm } from "./components/From/MonitorForm";
 
 function Monitor() {
   const dispatch = useAppDispatch();
   const serverErrorMessages = useAppSelector((state: RootState) => state.monitor.serverErrorMessages);
   const status = useSelector((state: RootState) => state.monitor.status);
+  
+  const [ openForm, setOpenForm ] = useState(false);
   const [ errorModalOpen, setErrorModalOpen ] = useState(false);
   const [ loadingModalOpen, setLoadingModalOpen ] = useState(false);
+
+  const handleClickOpenForm = () => {
+    setOpenForm(true);
+  };
+
+  const handleCloseForm = () => {
+    setOpenForm(false);
+  };
 
   useEffect(() => {
     document.title = "System health";
@@ -42,6 +53,15 @@ function Monitor() {
         sideBar={ 
           <SideBar items={[
             {
+              label: "Add monitor url",
+              children: <ListItemButton
+                onClick={handleClickOpenForm}
+              >
+                <ListItemIcon><AddIcon/></ListItemIcon>
+                <ListItemText primary="Add monitor url" />
+              </ListItemButton>
+            },
+            {
               label: "Monitor list",
               expanded: true,
               children: <MonitorList />
@@ -56,12 +76,16 @@ function Monitor() {
             </Typography>    
           </Grid>
           <Grid item xs={12} sm={12}>
-            <FormDialog/>
-          </Grid>
-
-          <Grid item xs={12} sm={12}>
             <MonitorChart />
           </Grid>
+          
+          <MonitorForm
+            title="Subscribe to a new url"
+            open={openForm}
+            onClose={handleCloseForm} 
+          />
+
+
         </Grid>
 
         <ErrorModal 
