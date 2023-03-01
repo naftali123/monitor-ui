@@ -1,15 +1,15 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import monitorReducer from '../pages/Monitor/state/monitorSlice';
-import { api } from '../pages/Monitor/state/websocket';
+import { activityHistoryApi } from '../pages/Monitor/state/websocket';
 
 export const store = configureStore({
   reducer: {
     monitor: monitorReducer,
-    [api.reducerPath]: api.reducer,
+    [activityHistoryApi.reducerPath]: activityHistoryApi.reducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware({  
     serializableCheck: false
-  }).concat([api.middleware]),
+  }).concat([activityHistoryApi.middleware]),
 });
 
 export type AppDispatch = typeof store.dispatch;

@@ -1,14 +1,12 @@
 import { useSelector } from 'react-redux';
-import { remove } from '../state/monitorSlice';
-import { useAppDispatch } from '../../../app/hooks';
-import { Button, CircularProgress, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
-import { RootState } from "../../../app/store";
-import { Url } from "../types";
+import { CircularProgress, Grid, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
 import { Link } from "react-router-dom";
+import { RootState } from "../../../app/store";
+import { Url } from "../types/Url";
+import { MonitorMenu } from './MonitorMenu';
 
 export function MonitorList() {
   const status = useSelector((state: RootState) => state.monitor.status);
-  const dispatch = useAppDispatch();
   const subscriptions: Url[] = useSelector((state: RootState) => state.monitor.subscriptions);
   const onPress = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     e.preventDefault();
@@ -27,27 +25,31 @@ export function MonitorList() {
     }
   };
   return (
-    <List>
-
+    <List style={{ paddingTop: 0, paddingBottom: 0 }}>
       {status === 'loading'
-        ? <CircularProgress />
+        ? <ListItem disablePadding><ListItemText><CircularProgress /></ListItemText></ListItem>
         : subscriptions.map((url: Url) => (
-          <ListItem key={url.appId} disablePadding>
-            <ListItemButton
-              onClick={(e) => onPress(e)}
-              component={Link}
-              to={`#${url.appId}`}
-            >
-              <div data-to-scrollspy-id={url.appId}>
-                <ListItemText
-                  primary={url.label} />
-                <Button
-                  onClick={() => dispatch(remove(url.url))}
-                  variant="outlined"
-                  size="small"
-                >Delete</Button>
-              </div>
-            </ListItemButton>
+          <ListItem key={url.appId} disablePadding secondaryAction={ <MonitorMenu url={url}/> }>
+            <ListItemText primary={
+              <Grid 
+                container
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+              >
+                <Grid item xs>
+                  <ListItemButton
+                    onClick={(e) => onPress(e)}
+                    component={Link}
+                    to={`#${url.appId}`}
+                  >
+                    <div data-to-scrollspy-id={url.appId}>
+                      { url.label }
+                    </div>
+                  </ListItemButton>
+                </Grid>
+              </Grid>  
+            }/>
           </ListItem>
         ))}
     </List>

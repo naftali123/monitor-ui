@@ -1,25 +1,20 @@
-import { 
-  createAsyncThunk, 
-  createSlice, 
-  // PayloadAction 
+import {
+  createAsyncThunk,
+  createSlice,
 } from '@reduxjs/toolkit';
-import { 
-  // RootState 
-} from '../../../app/store';
-import { 
-  MonitorUrlRequest,
-  Url 
-} from '../types';
+
+import { Url } from "../types/Url";
+import { MonitorUrlRequest } from "../types/MonitorUrlRequest";
 import { MONITOR_DOMAIN, MONITOR_DOMAIN_DEFAULT_PORT } from './config';
 import { MonitorAPI } from './monitorAPI';
 
-export interface CounterState {
+export interface MonitorState {
   subscriptions: Url[];
-  status: 'idle' | 'loading' | 'success' | 'failed';
+  status: 'idle' | 'loading' | 'success' | 'failed' | 'unavailable';
   serverErrorMessages: string[];
 }
 
-const initialState: CounterState = {
+const initialState: MonitorState = {
   subscriptions: [],
   status: 'idle',
   serverErrorMessages: [],
@@ -79,7 +74,23 @@ export const getActivityHistory = createAsyncThunk(
 export const monitorSlice = createSlice({
   name: 'monitor',
   initialState,
-  reducers: {},
+  reducers: {
+    unavailable: (state) => {
+      state.status = 'unavailable';
+    },
+    clearServerErrorMessages: (state) => {
+      state.serverErrorMessages = [];
+    },
+    activitiesUpdated: (state, action) => {
+      const url = state.subscriptions.find((url) => url.label === action.payload.label);
+      if (url) {
+        url.activityHistory.push(action.payload);
+        if (url.activityHistory.length > 20) {
+          url.activityHistory.shift();
+        }
+      }
+    }
+  },
   extraReducers: (builder) => {
     builder
       // getAllUrls
@@ -99,7 +110,7 @@ export const monitorSlice = createSlice({
         state.status = 'failed';
         // state.serverErrorMessages = [...state.serverErrorMessages, ...action.payload];
       })
-      
+
       // addUrl
       .addCase(addUrl.pending, (state) => {
         state.status = 'loading';
@@ -149,7 +160,7 @@ export const monitorSlice = createSlice({
         else {
           console.error('Error getting activity history: ', action.payload);
         }
-      })  
+      })
       .addCase(getActivityHistory.rejected, (state) => {
         state.status = 'failed';
       })

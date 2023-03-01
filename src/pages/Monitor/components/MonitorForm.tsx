@@ -5,19 +5,20 @@ import Box from '@mui/material/Box/Box';
 import { addUrl } from '../state/monitorSlice';
 import { useAppDispatch } from '../../../app/hooks';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid } from '@mui/material';
-import { TextFieldControllerWrapper } from "./TextFieldControllerWrapper";
-import { MonitorUrlRequest } from "../types";
-import TagsArray from "./TagsInput";
-import { FormProps } from "./FormProps";
+import { MonitorUrlRequest } from "../types/MonitorUrlRequest";
+import { SimpleModalProps } from "../../components/Modal/SimpleModalProps";
+import TagsArray from "../../components/Form/TagsInput";
+import { TextFieldControllerWrapper } from "../../components/Form/TextFieldControllerWrapper";
 
 const schema: yup.Schema<MonitorUrlRequest> = yup.object({
   url: yup.string().required(),
   label: yup.string().required(),
-  frequency: yup.number().required(),
+  interval: yup.number().required(),
+  threshold: yup.number().required(),
   tags: yup.array().of(yup.string().required())
 });
 
-export function MonitorForm({ onClose, open, title }: FormProps) {
+export function MonitorForm({ onClose, open, title }: SimpleModalProps) {
   const dispatch = useAppDispatch();
 
   const {
@@ -27,7 +28,7 @@ export function MonitorForm({ onClose, open, title }: FormProps) {
     // watch, 
     formState: { errors, isValid }
   } = useForm({
-    defaultValues: { url: '', label: '', frequency: 0 },
+    defaultValues: { url: '', label: '', interval: 10, threshold: 1500, tags: [] },
     resolver: yupResolver(schema)
   });
 
@@ -40,7 +41,7 @@ export function MonitorForm({ onClose, open, title }: FormProps) {
   const handleClose = () => {
     onClose();
     clearErrors();
-    reset({ url: '', label: '', frequency: 0 });
+    reset({ url: '', label: '', interval: 0 });
   };
 
   return (
@@ -49,24 +50,31 @@ export function MonitorForm({ onClose, open, title }: FormProps) {
       <DialogContent>
         <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 3 }}>
           <Grid container spacing={2} maxWidth={"sm"}>
-            <Grid item xs={12} sm={12}>
+            <Grid item xs={12} sm={6}>
               <TextFieldControllerWrapper
                 required
                 name="url"
                 control={control}
                 errors={errors} />
             </Grid>
-            <Grid item xs={12} sm={10}>
+            <Grid item xs={12} sm={6}>
               <TextFieldControllerWrapper
                 required
                 name="label"
                 control={control}
                 errors={errors} />
             </Grid>
-            <Grid item xs={4} sm={2}>
+            <Grid item xs={6} sm={6}>
               <TextFieldControllerWrapper
                 required
-                name="frequency"
+                name="interval"
+                control={control}
+                errors={errors} />
+            </Grid>
+            <Grid item xs={6} sm={6}>
+              <TextFieldControllerWrapper
+                required
+                name="threshold"
                 control={control}
                 errors={errors} />
             </Grid>

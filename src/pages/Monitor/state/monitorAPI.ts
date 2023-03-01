@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { MonitorUrlRequest, Url } from "../types";
+import { Url } from "../types/Url";
+import { MonitorUrlRequest } from "../types/MonitorUrlRequest";
 
 export class MonitorAPI {
   
@@ -31,7 +32,7 @@ export class MonitorAPI {
       .map(
         (url: any) => typeof url === 'string' 
           ? url 
-          : new Url(url.uuid, url.label, url.url, url.tags, url.active, url.frequency, url.activityHistory)
+          : new Url(url.uuid, url.label, url.url, url.tags, url.active, url.interval, url.threshold, url.activityHistory)
         );
   }
 
@@ -68,7 +69,7 @@ export class MonitorAPI {
       .map(
         (url: any) => typeof url === 'string' 
           ? url 
-          : new Url(url.uuid, url.label, url.url, url.tags, url.active, url.frequency, url.activityHistory)
+          : new Url(url.uuid, url.label, url.url, url.tags, url.active, url.interval, url.threshold, url.activityHistory)
         );
   }
 }

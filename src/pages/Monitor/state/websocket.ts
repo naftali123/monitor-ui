@@ -2,38 +2,32 @@
 
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { io } from 'socket.io-client'
-import { ActivityHistory } from '../types'
+import { ActivityHistory } from "../types/ActivityHistory";
 import { MONITOR_DOMAIN, MONITOR_DOMAIN_DEFAULT_PORT } from './config'
 
 const domain: string = `${MONITOR_DOMAIN}:${MONITOR_DOMAIN_DEFAULT_PORT}`;
 
 const limit: number = 20;
 
-export const api = createApi({
+const socket = io(`http://${domain}`, {transports: ["websocket"]}).connect();
+
+export const activityHistoryApi = createApi({
     baseQuery: fetchBaseQuery({ baseUrl: `http://${domain}/monitor/urls/`}),
     endpoints: (build) => ({
         getActivities: build.query<ActivityHistory[], string>({
             query: (label) => `activity-history/${label}/${limit}`,
-            async onCacheEntryAdded(arg,{ updateCachedData, cacheDataLoaded, cacheEntryRemoved }) {
-                const socket = io(`http://${domain}`, {transports: ["websocket"]}).connect();
+            async onCacheEntryAdded(arg,{ updateCachedData, cacheDataLoaded, cacheEntryRemoved, dispatch }) {
                 try {
-                    // wait for the initial query to resolve before proceeding
-                    const { data, meta } = await cacheDataLoaded
-                    // console.log('cacheDataLoaded:', data, meta);
-                    socket.on('activityHistory.updated', (message) => {
-                        updateCachedData((draft) => { 
+                    await cacheDataLoaded
+                    socket.on(`activityHistory.${arg}.updated`, (message) => {
+                        updateCachedData((draft) => {
+                            message.label = arg;
                             if(draft.length >= limit) draft.shift()
                             draft.push(message);
+                            dispatch({type: 'monitor/activitiesUpdated', payload: message});
                         });
                     });
-
-                    socket.on('connect', () => {
-                        console.log('socket connected on rtk query');
-                    });
-                    socket.on('message', (message) => {
-                        console.log(`received message: ${message}`);
-                        // updateCachedData((draft) => { draft.push(message);});
-                    });                    
+                    socket.on('connect', () => console.log('socket connected on rtk query'));
                 } catch(e: any | unknown) {
                     console.error(e);
                     // no-op in case `cacheEntryRemoved` resolves before `cacheDataLoaded`, in which case `cacheDataLoaded` will throw
@@ -47,4 +41,4 @@ export const api = createApi({
     }),
 })
 
-export const { useGetActivitiesQuery } = api
+export const { useGetActivitiesQuery } = activityHistoryApi;

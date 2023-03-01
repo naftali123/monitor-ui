@@ -1,16 +1,4 @@
-export type MonitorUrlRequest = {
-    url: string,
-    label: string,
-    frequency: number,
-    tags?: string[]
-}
-
-export type ActivityHistory = {
-    active: boolean,
-    date: string,
-    info: string,
-    responseTime: number
-}
+import { ActivityHistory } from "./ActivityHistory";
 
 export class Url {
     appId: string;
@@ -20,7 +8,8 @@ export class Url {
         public url: string,
         public tags: string[],
         public active: boolean,
-        public frequency: number,
+        public interval: number,
+        public threshold: number,
         public activityHistory: ActivityHistory[]
     ) {
         this.appId = uuid.slice(0, 4) + this.label.trim().replaceAll(' ', '-').toLowerCase();
@@ -33,7 +22,8 @@ export class Url {
             json.url,
             json.tags,
             json.active,
-            json.frequency,
+            json.interval,
+            json.threshold,
             json.activityHistory
         );
     }

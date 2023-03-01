@@ -2,7 +2,7 @@ import { styled } from '@mui/material/styles';
 import Chip from '@mui/material/Chip';
 import Paper from '@mui/material/Paper';
 import { TextFieldControllerWrapperProps, TextFieldControllerWrapper } from './TextFieldControllerWrapper';
-import { upFirstLetter } from "./utils";
+import { upFirstLetter } from "../utils";
 import Grid from '@mui/material/Grid/Grid';
 import { useState } from 'react';
 import { Controller, FieldValues, useForm } from 'react-hook-form';

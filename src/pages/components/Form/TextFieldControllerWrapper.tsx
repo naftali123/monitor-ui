@@ -1,7 +1,7 @@
 import { TextField, TextFieldProps } from "@mui/material";
 import { Control, Controller, FieldErrors, RegisterOptions } from "react-hook-form";
 import { InputErrorMessage } from "./InputErrorMessage";
-import { upFirstLetter } from "./utils";
+import { upFirstLetter } from "../utils";
 
 export type BasicControllerWrapperProps = {
     control?: Control<any>,

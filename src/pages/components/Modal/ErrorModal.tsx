@@ -1,12 +1,12 @@
 import Box from '@mui/material/Box/Box';
-import { useAppSelector } from '../../../app/hooks';
 import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Typography } from '@mui/material';
-import { RootState } from "../../../app/store";
-import { FormProps } from "./FormProps";
+import { SimpleModalProps } from "./SimpleModalProps";
 
-export function ErrorModal({ onClose, open, title }: FormProps) {
-  const serverErrorMessages = useAppSelector((state: RootState) => state.monitor.serverErrorMessages);
+export interface ErrorModalProps extends SimpleModalProps {
+  errorMessages: string[];
+}
 
+export function ErrorModal({ onClose, open, title, errorMessages }: ErrorModalProps) {
   const handleClose = () => {
     onClose();
   };
@@ -22,8 +22,8 @@ export function ErrorModal({ onClose, open, title }: FormProps) {
         <Box component="form" noValidate sx={{ mt: 3 }}>
           <Grid container spacing={2} maxWidth={"sm"}>
             <Grid item xs={12} sm={12}>
-              {serverErrorMessages.length > 0 && serverErrorMessages.map(
-                (msg, i) => <Grid m={1}><Alert severity="error" key={i} variant="outlined">
+              {errorMessages.length > 0 && errorMessages.map(
+                (msg, i) => <Grid key={i+msg} m={1}><Alert severity="error" variant="outlined">
                   <Typography color="error" variant="body2">
                     {msg}
                   </Typography>
