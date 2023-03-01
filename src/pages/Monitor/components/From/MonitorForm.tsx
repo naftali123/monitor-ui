@@ -2,13 +2,13 @@ import * as yup from "yup";
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FieldValues, useForm } from 'react-hook-form';
 import Box from '@mui/material/Box/Box';
-import { addUrl } from '../state/monitorSlice';
-import { useAppDispatch } from '../../../app/hooks';
+import { addUrl } from '../../state/monitorSlice';
+import { useAppDispatch } from '../../../../app/hooks';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid } from '@mui/material';
-import { MonitorUrlRequest } from "../types/MonitorUrlRequest";
-import { SimpleModalProps } from "../../components/Modal/SimpleModalProps";
-import TagsArray from "../../components/Form/TagsInput";
-import { TextFieldControllerWrapper } from "../../components/Form/TextFieldControllerWrapper";
+import { MonitorUrlRequest } from "../../types/MonitorUrlRequest";
+import { SimpleModalProps } from "../../../components/Modal/SimpleModalProps";
+import TagsArray from "../../../components/Form/TagsInput";
+import { TextFieldControllerWrapper } from "../../../components/Form/TextFieldControllerWrapper";
 
 const schema: yup.Schema<MonitorUrlRequest> = yup.object({
   url: yup.string().required(),

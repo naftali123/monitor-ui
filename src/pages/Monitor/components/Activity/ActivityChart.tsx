@@ -8,7 +8,7 @@ import {
   Tooltip,
   ResponsiveContainer
 } from 'recharts';
-import { ActivityHistory } from "../types/ActivityHistory";
+import { ActivityHistory } from "../../types/ActivityHistory";
 
 type ActivityChartProps = {
   syncId?: string;

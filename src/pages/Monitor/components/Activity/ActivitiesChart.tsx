@@ -4,8 +4,8 @@ import Box from '@mui/material/Box/Box';
 import { Grid } from '@mui/material';
 import ScrollSpy from "react-ui-scrollspy";
 import ActivityCard from "./ActivityCard";
-import { RootState } from "../../../app/store";
-import { Url } from "../types/Url";
+import { RootState } from "../../../../app/store";
+import { Url } from "../../types/Url";
 
 export function MonitorChart() {
   const syncId = useMemo(() => Math.random().toString(36).substring(2), []);

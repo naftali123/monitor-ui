@@ -5,7 +5,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { ActivityHistory } from "../types/ActivityHistory";
+import { ActivityHistory } from "../../types/ActivityHistory";
 import TablePagination from '@mui/material/TablePagination/TablePagination';
 import { useState } from 'react';
 import Chip from '@mui/material/Chip/Chip';

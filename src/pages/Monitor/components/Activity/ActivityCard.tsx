@@ -7,24 +7,14 @@ import Collapse from '@mui/material/Collapse';
 import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Alert from '@mui/material/Alert/Alert';
 
-import { Url } from "../types/Url";
 import ActivityData from './ActivityData';
 import { ActivityChart } from './ActivityChart';
 import { useEffect, useState } from 'react';
-import { useGetActivitiesQuery } from '../state/websocket';
-import { MonitorMenu } from './MonitorMenu';
-
-function UnavailableDataAlert() {
-  return (
-    <Alert severity="error" variant="outlined">
-      <Typography color="error" variant="body2">
-        Unavailable Data
-      </Typography>
-    </Alert>
-  );
-}
+import { useGetActivitiesQuery } from '../../state/websocket';
+import { MonitorMenu } from '../MonitorMenu';
+import { Url } from '../../types/Url';
+import { UnavailableDataAlert } from './UnavailableDataAlert';
 
 interface ExpandMoreProps extends IconButtonProps { expand: boolean; }
 
