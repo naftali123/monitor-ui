@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from 'react-redux';
 import { getAllUrls } from './state/monitorSlice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { Grid, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import { Grid, Link, ListItemButton, ListItemIcon, ListItemText, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import CustomTheme from '../components/Theme';
 import { RootState } from "../../app/store";
@@ -17,7 +17,9 @@ function Monitor() {
   const dispatch = useAppDispatch();
   const serverErrorMessages = useAppSelector((state: RootState) => state.monitor.serverErrorMessages);
   const status = useSelector((state: RootState) => state.monitor.status);
-  
+  const sumUrls: number = useSelector((state: RootState) => state.monitor.subscriptions.length);
+
+
   const [ openForm, setOpenForm ] = useState(false);
   const [ errorModalOpen, setErrorModalOpen ] = useState(false);
   const [ loadingModalOpen, setLoadingModalOpen ] = useState(false);
@@ -73,6 +75,8 @@ function Monitor() {
           <Grid item xs={12} sm={12}>
             <ActivitiesCharts />
           </Grid>
+
+          { sumUrls === 0 && <FirstTimeMessage handleClickOpenForm={handleClickOpenForm}/> }
           
           <MonitorForm
             title="Subscribe to a new url"
@@ -102,3 +106,24 @@ function Monitor() {
 }
 
 export default Monitor;
+
+interface FirstTimeMessageProps {
+  handleClickOpenForm: () => void;
+}
+
+function FirstTimeMessage(props: FirstTimeMessageProps) {
+  const { handleClickOpenForm } = props;
+  return <Grid item xs={12} sm={12}>
+    <Grid container spacing={2} justifyContent="center">
+      <Grid item>
+        <Typography
+          align="center"
+        >
+          Welcome to Monitor, the web monitoring tool,
+          <br />
+          to begin, <span>&#20;</span><Link href="#" onClick={handleClickOpenForm}>create your first monitor url</Link><span>&#20;</span> to monitor.
+        </Typography>
+      </Grid>
+    </Grid>
+  </Grid>;
+}

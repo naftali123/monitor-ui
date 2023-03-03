@@ -51,6 +51,9 @@ export default function ActivityCard(props: MonitorCardProps) {
     if(data?.every((activity) => !activity.active)){
       setInactive(true);
     }
+    else {
+      setInactive(false);
+    }
 
     let dataStreamTimeout = setTimeout(() => {
       setShowUnavailableDataAlert(true);

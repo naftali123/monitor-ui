@@ -24,7 +24,6 @@ export function ActivitiesCharts() {
               <Box>
                 <ActivityCard url={url} syncId={syncId}/>
               </Box>
-              <hr/>
             </Grid>
           );
         })}
