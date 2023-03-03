@@ -7,14 +7,15 @@ import Collapse from '@mui/material/Collapse';
 import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-
+import ErrorIcon from '@mui/icons-material/Error';
 import ActivityData from './ActivityData';
 import { ActivityChart } from './ActivityChart';
 import { useEffect, useState } from 'react';
 import { useGetActivitiesQuery } from '../../state/websocket';
 import { MonitorMenu } from '../MonitorMenu';
 import { Url } from '../../types/Url';
-import { UnavailableDataAlert } from './UnavailableDataAlert';
+import { Chip, Grid } from '@mui/material';
+import { separateCamelCaseAndUpFirstLetter } from '../../../components/utils';
 
 interface ExpandMoreProps extends IconButtonProps { expand: boolean; }
 
@@ -36,8 +37,8 @@ interface MonitorCardProps {
 
 export default function ActivityCard(props: MonitorCardProps) {
   const { url, syncId } = props;
-  const [ showUnavailableDataAlert, setShowUnavailableDataAlert ] = useState(false);
-
+  const [ unavailable, setShowUnavailableDataAlert ] = useState(false);
+  const [ inactive, setInactive ] = useState(false);
   const {
     data,
     // isLoading,
@@ -47,6 +48,10 @@ export default function ActivityCard(props: MonitorCardProps) {
   } = useGetActivitiesQuery(url.label);
 
   useEffect(() => {
+    if(data?.every((activity) => !activity.active)){
+      setInactive(true);
+    }
+
     let dataStreamTimeout = setTimeout(() => {
       setShowUnavailableDataAlert(true);
     }, url.interval * 1000);
@@ -54,7 +59,7 @@ export default function ActivityCard(props: MonitorCardProps) {
       setShowUnavailableDataAlert(false);
       clearTimeout(dataStreamTimeout);
     };
-  }, [data, url.interval, setShowUnavailableDataAlert]);
+  }, [data, url.interval, setShowUnavailableDataAlert, setInactive]);
 
   const [expanded, setExpanded] = useState(false);
 
@@ -67,16 +72,29 @@ export default function ActivityCard(props: MonitorCardProps) {
     >
       <CardHeader
         action={<MonitorMenu url={url}/>}
-        title={url.label}
+        title={
+          <Grid container spacing={1}>
+            <Grid item>
+              <Typography variant="h6" component="h2">
+                {separateCamelCaseAndUpFirstLetter(url.label)}
+              </Typography>
+            </Grid>
+            <Grid item>
+              { inactive && <Chip size="small" color="error" icon={<ErrorIcon/>} label="Inactive" />}
+            </Grid>
+            <Grid item>
+              { unavailable && <Chip size="small" color="warning" icon={<ErrorIcon/>} label="Unavailable data" />}
+            </Grid>
+          </Grid>
+        }
         subheader={url.url}
       />
-      <CardContent>
-        { showUnavailableDataAlert && <UnavailableDataAlert />}
+      {!inactive && <CardContent>
         <ActivityChart
           data={data}
           syncId={`${syncId}-${url.tags.join()}`}
         />
-      </CardContent>
+      </CardContent>}
       <CardActions disableSpacing>
         <ExpandMore
           expand={expanded}
@@ -92,8 +110,8 @@ export default function ActivityCard(props: MonitorCardProps) {
           <ActivityData 
             data={data ?? []}
             label={url.label}
+            excludeFields={['label']}
           />
-          <Typography paragraph></Typography>
         </CardContent>
       </Collapse>
     </Card>

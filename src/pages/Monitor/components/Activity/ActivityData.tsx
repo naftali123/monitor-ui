@@ -9,14 +9,16 @@ import { ActivityHistory } from "../../types/ActivityHistory";
 import TablePagination from '@mui/material/TablePagination/TablePagination';
 import { useState } from 'react';
 import Chip from '@mui/material/Chip/Chip';
+import { isValidDate, separateCamelCaseAndUpFirstLetter } from '../../../components/utils';
 
 interface ActivityDataProps {
     label: string;
     data: ActivityHistory[];
+    excludeFields?: string[];
 }
 
 export default function ActivityData(props: ActivityDataProps) {
-    const { label, data } = props;
+    const { label, data, excludeFields } = props;
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -37,10 +39,10 @@ export default function ActivityData(props: ActivityDataProps) {
                     (<Table sx={{ minWidth: 650 }} aria-label="simple table">
                         <TableHead>
                             <TableRow>
-                                {Object.keys(data[0]).map((key, i) => (
+                                {Object.keys(data[0]).filter((key)=>!excludeFields || !excludeFields?.includes(key)).map((key, i) => (
                                     data[0][key as keyof typeof data[0]] !== undefined && typeof data[0][key as keyof typeof data[0]] === 'number'
-                                        ? <TableCell key={label + i} align="right">{key}</TableCell>
-                                        : <TableCell key={label + i}>{key}</TableCell>
+                                        ? <TableCell key={label + i} align="right">{separateCamelCaseAndUpFirstLetter(key)}</TableCell>
+                                        : <TableCell key={label + i}>{separateCamelCaseAndUpFirstLetter(key)}</TableCell>
                                 ))}
                             </TableRow>
                         </TableHead>
@@ -53,7 +55,25 @@ export default function ActivityData(props: ActivityDataProps) {
                                         key={label + row.responseTime + row.date}
                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                     >
-                                        <TableCell align="right">
+                                    {Object.keys(row).filter((key)=>!excludeFields || !excludeFields?.includes(key)).map((key, i) => {
+                                        if(row[key as keyof typeof row] !== undefined){
+                                            if(typeof row[key as keyof typeof row] === 'number')
+                                                return <TableCell key={label + i} align="right">{row[key as keyof typeof row]}</TableCell>
+                                            else if(typeof row[key as keyof typeof row] === 'boolean'){
+                                                return (<TableCell key={label + i}>
+                                                    { row[key as keyof typeof row]
+                                                        ? <Chip label="Active" color="success" />
+                                                        : <Chip label="Inactive" color="error" />
+                                                    }
+                                                </TableCell>) 
+                                            }
+                                            else if(typeof row[key as keyof typeof row] === 'string' && isValidDate(row[key as keyof typeof row] as string)){
+                                                return <TableCell key={label + i}>{new Date(row[key as keyof typeof row] as string ).toLocaleString()} </TableCell>
+                                            }
+                                        }
+                                        return <TableCell key={label + i}>{row[key as keyof typeof row]}</TableCell>
+                                    })}
+                                        {/* <TableCell align="right">
                                             {row.active
                                                 ? <Chip label="Active" color="success" />
                                                 : <Chip label="Inactive" color="error" />
@@ -63,7 +83,7 @@ export default function ActivityData(props: ActivityDataProps) {
                                             {new Date(row.date).toLocaleString()}
                                         </TableCell>
                                         <TableCell align="right">{row.info}</TableCell>
-                                        <TableCell align="right">{row.responseTime}</TableCell>
+                                        <TableCell align="right">{row.responseTime}</TableCell> */}
                                     </TableRow>
                                 ))}
                         </TableBody>
