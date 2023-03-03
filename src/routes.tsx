@@ -4,11 +4,17 @@ import {
 import Home from './pages/Home';
 import Monitor from './pages/Monitor';
 
-const router = createBrowserRouter([
-  { path: "/", element: <Home/> },
-  { path: "/monitor", element: <Monitor/> },
-]);
+export const routesList = [
+  { 
+    path: "/", 
+    name: "Home",
+    element: <Home/>
+  },
+  { 
+    path: "/monitor", 
+    name: "Monitor",
+    element: <Monitor/> 
+  },
+]
 
-export {
-  router
-};
+export const router = createBrowserRouter(routesList);

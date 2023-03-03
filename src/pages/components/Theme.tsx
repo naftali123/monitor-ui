@@ -2,22 +2,18 @@ import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
-import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import MailIcon from '@mui/icons-material/Mail';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
+import MonitorHeartIcon from '@mui/icons-material/MonitorHeart';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { InputBaseProps } from '@mui/material/InputBase/InputBase';
 import Footer from './Footer';
+import { Avatar, Chip, Grid, Paper } from '@mui/material';
+import CollapsedBreadcrumbs, { BreadcrumbsItem } from './CollapsedBreadcrumbs';
+import { routesList } from '../../routes';
+import { NavBarLinks } from './NavBarLinks';
 
 const theme = createTheme({
     palette: {
@@ -27,13 +23,14 @@ const theme = createTheme({
 
 const drawerWidth = 240;
 
-interface Props {
+interface CustomThemeProps {
     window?: () => Window;
     title?: string,
     children: React.ReactNode,
     sideBar?: React.ReactNode,
     searchProps?: InputBaseProps,
     displayAppBar?: boolean,
+    breadcrumbsItems?: BreadcrumbsItem[],
 }
 
 export default function CustomTheme({ 
@@ -43,9 +40,13 @@ export default function CustomTheme({
     sideBar,
     searchProps,
     displayAppBar = true,
-
-}: Props) {
+    breadcrumbsItems = []
+}: CustomThemeProps) {
     const [mobileOpen, setMobileOpen] = React.useState(false);
+
+    React.useEffect(() => {
+        if(title) document.title = title;
+    }, [title]);
 
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
@@ -53,8 +54,7 @@ export default function CustomTheme({
 
     const drawer = (
         <div>
-            <Toolbar />
-            <Divider />
+            <Toolbar/>
             { sideBar }
         </div>
     );
@@ -69,11 +69,12 @@ export default function CustomTheme({
                 <AppBar
                     position="fixed"
                     sx={ !sideBar ? {} : {
-                        width: { sm: `calc(100% - ${drawerWidth}px)` },
-                        ml: { sm: `${drawerWidth}px` },
+                        width: { sm: '100%' },//`calc(100% - ${drawerWidth}px)` },
+                        // ml: { sm: `${drawerWidth}px` },
+                        zIndex: 9999,
                     }}
                 >
-                    <Toolbar>
+                    <Toolbar sx={{ marginLeft: '15%', marginRight: '15%' }}>
                         <IconButton
                             color="inherit"
                             aria-label="open drawer"
@@ -83,9 +84,28 @@ export default function CustomTheme({
                         >
                             <MenuIcon />
                         </IconButton>
-                        <Typography variant="h6" noWrap component="div">
-                            {title}
-                        </Typography>
+                        <Box sx={{ display: 'flex' }}>
+                            <Grid container spacing={2} justifyContent="space-around">
+                                <Grid item>
+                                    <Chip
+                                        icon={<Avatar sx={{ width: 24, height: 24 }}>
+                                            <MonitorHeartIcon sx={{ width: 44, height: 44 }}/>
+                                        </Avatar>}
+                                        label="Urls monitor"
+                                    />
+                                    
+                                </Grid>
+                            </Grid>
+                        </Box>
+
+                        <Box sx={{ flexGrow: 1, display: { md: 'flex' }, maxWidth: "70%", marginLeft: '15%', marginRight: '15%' }}>
+                            <NavBarLinks pages={
+                                routesList.filter((r)=>r.path !== '/').map((route) => ({
+                                    to: route.path,
+                                    label: route.name
+                                }))
+                            }/>
+                        </Box>
                     </Toolbar>
                 </AppBar> 
                 ) : (<></>) }
@@ -95,7 +115,6 @@ export default function CustomTheme({
                     sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
                     aria-label="mailbox folders"
                 >
-                    {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
                     <Drawer
                         container={container}
                         variant="temporary"
@@ -129,7 +148,30 @@ export default function CustomTheme({
                 >
                   <Box sx={{ p: 3 }}>
                     <Toolbar />
-                        {children}
+                    <Paper elevation={3} sx={{ p: 0, mt: 1 }}>
+                        <CollapsedBreadcrumbs items={[
+                            ...[
+                                {
+                                    label: 'Urls monitor',
+                                    to: '/',
+                                }
+                            ],
+                            ...breadcrumbsItems
+                        ]}/>
+                    </Paper>
+                    
+                    { children && React.Children.count(children) > 0 && (
+                        <Paper 
+                            variant="outlined"
+                            sx={{ 
+                                p: 2, 
+                                mt: 1, 
+                                minHeight: '65vh' 
+                            }}
+                        >
+                            { children }
+                        </Paper>
+                    )}
                   </Box>
                   <Footer />
                 </Box>
@@ -137,46 +179,3 @@ export default function CustomTheme({
         </ThemeProvider>
     );
 }
-// import CssBaseline from '@mui/material/CssBaseline';
-// import Container from '@mui/material/Container';
-// import { createTheme, ThemeProvider } from '@mui/material/styles';
-// import Box from '@mui/material/Box/Box';
-// import Footer from './Footer';
-// import CustomAppBar from './AppBar';
-// import { InputBaseProps } from '@mui/material/InputBase/InputBase';
-
-// const theme = createTheme({
-//     palette: {
-//       mode: 'dark',
-//     },
-//   });
-
-// type CustomThemeProps = {
-//     children: React.ReactNode
-//     searchProps?: InputBaseProps,
-//     displayAppBar?: boolean
-// }
-
-// export default function CustomTheme({ children, searchProps, displayAppBar = true }: CustomThemeProps){
-//   return (
-//   <ThemeProvider theme={theme}>
-//     { displayAppBar && <CustomAppBar searchProps={searchProps ?? {}} searchInput/> }
-//     <Container component="main" maxWidth="xl">
-//         <Box
-//         margin={0}
-//             sx={{
-//                 display: 'flex',
-//                 flexDirection: 'column',
-//                 minHeight: '100vh',
-//             }}
-//         >
-//             <CssBaseline />
-//             <Container component="main" sx={{ mt: 0, mb: 2 }} maxWidth="lg">
-//                 { children }
-//             </Container>
-//             <Footer />
-//         </Box>
-//     </Container>
-//   </ThemeProvider>
-//   );
-// }

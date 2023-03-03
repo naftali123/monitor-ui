@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { useSelector } from 'react-redux';
 import { getAllUrls } from './state/monitorSlice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { Grid, Typography, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import { Grid, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import CustomTheme from '../components/Theme';
 import { RootState } from "../../app/store";
-import { MonitorChart } from "./components/Activity/ActivitiesChart";
+import { ActivitiesCharts } from "./components/Activity/ActivitiesCharts";
 import { MonitorList } from "./components/MonitorList";
 import SideBar from "../components/SideBar";
 import { ErrorModal } from "../components/Modal/ErrorModal";
@@ -31,7 +31,6 @@ function Monitor() {
   };
 
   useEffect(() => {
-    document.title = "System health";
     if(status === 'idle')
       dispatch(getAllUrls());
     else if(status === 'failed'){
@@ -48,8 +47,9 @@ function Monitor() {
   }, [status, dispatch]);
 
   return (
-      <CustomTheme  
-        title="System health"
+      <CustomTheme
+        title="Monitor"
+        breadcrumbsItems={[{ label: "Monitor", to: "/monitor" }]}
         sideBar={ 
           <SideBar items={[
             {
@@ -71,12 +71,7 @@ function Monitor() {
       }>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={12}>
-            <Typography variant="body1">
-              Motorized services health based on response time
-            </Typography>    
-          </Grid>
-          <Grid item xs={12} sm={12}>
-            <MonitorChart />
+            <ActivitiesCharts />
           </Grid>
           
           <MonitorForm

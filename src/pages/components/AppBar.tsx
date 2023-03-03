@@ -13,7 +13,7 @@ type SearchAppBarProps = {
   searchProps: InputBaseProps
 }
 
-export default function CustomAppBar({ title, children }: PropsWithChildren<SearchAppBarProps> ) {
+export default function CustomAppBar({ title, children }: PropsWithChildren<SearchAppBarProps>) {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -27,15 +27,15 @@ export default function CustomAppBar({ title, children }: PropsWithChildren<Sear
           >
             <MenuIcon />
           </IconButton>
-          { title!=null && <Typography
+          {title!= null && <Typography
             variant="h6"
             noWrap
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
           >
-            { title }
-          </Typography> }
-          { children }
+            {title}
+          </Typography>}
+          {children}
         </Toolbar>
       </AppBar>
     </Box>

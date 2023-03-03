@@ -7,18 +7,18 @@ import ActivityCard from "./ActivityCard";
 import { RootState } from "../../../../app/store";
 import { Url } from "../../types/Url";
 
-export function MonitorChart() {
+export function ActivitiesCharts() {
   const syncId = useMemo(() => Math.random().toString(36).substring(2), []);
-  const subscriptions: Url[] = useSelector((state: RootState) => state.monitor.subscriptions);
+  const urls: Url[] = useSelector((state: RootState) => state.monitor.subscriptions);
 
   useEffect(() => {
-    console.log('subscriptions', subscriptions);
-  }, [subscriptions]);
+    console.log('urls', urls);
+  }, [urls]);
 
   return (
     <div>
       <ScrollSpy>
-        {subscriptions.map((url: Url) => {
+        {urls.map((url: Url) => {
           return (
             <Grid sx={{ mt: 3 }} key={url.appId} id={url.appId}>
               <Box>
