@@ -12,6 +12,7 @@ import SideBar from "../components/SideBar";
 import { ErrorModal } from "../components/Modal/ErrorModal";
 import { LoadingModal } from "../components/Modal/LoadingModal";
 import { MonitorForm } from "./components/From/MonitorForm";
+import { Route, Routes, useLocation, Outlet, Link as RouteLink } from "react-router-dom";
 
 function Monitor() {
   const dispatch = useAppDispatch();
@@ -47,6 +48,9 @@ function Monitor() {
       setLoadingModalOpen(false);
     }
   }, [status, dispatch]);
+  
+  let location = useLocation();
+  let state = location.state as { backgroundLocation?: Location };
 
   return (
       <CustomTheme
@@ -64,20 +68,34 @@ function Monitor() {
               </ListItemButton>
             },
             {
-              label: "Monitor list",
+              label: "Monitor urls",
+              to: "monitor/test",
+            },
+            {
+              label: "View all",
               expanded: true,
+              to: "monitor/view-all",
               children: <MonitorList />
             }
           ]}            
           /> 
       }>
         <Grid container spacing={2}>
+          
           <Grid item xs={12} sm={12}>
-            <ActivitiesCharts />
+            <Routes location={state?.backgroundLocation || location}>
+              <Route path="monitor/" element={
+                sumUrls === 0 && <FirstTimeMessage handleClickOpenForm={handleClickOpenForm}/>
+              }/>
+              <Route index path="monitor/test" element={
+                <>
+                  test
+                </>
+              } />
+              <Route path="monitor/view-all" element={<ActivitiesCharts />} />
+            </Routes>
           </Grid>
 
-          { sumUrls === 0 && <FirstTimeMessage handleClickOpenForm={handleClickOpenForm}/> }
-          
           <MonitorForm
             title="Subscribe to a new url"
             open={openForm}

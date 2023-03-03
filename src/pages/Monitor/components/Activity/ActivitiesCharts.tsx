@@ -11,9 +11,9 @@ export function ActivitiesCharts() {
   const syncId = useMemo(() => Math.random().toString(36).substring(2), []);
   const urls: Url[] = useSelector((state: RootState) => state.monitor.subscriptions);
 
-  useEffect(() => {
-    console.log('urls', urls);
-  }, [urls]);
+  // useEffect(() => {
+  //   console.log('urls', urls);
+  // }, [urls]);
 
   return (
     <div>

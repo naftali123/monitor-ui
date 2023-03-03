@@ -15,10 +15,11 @@ export default function SideBar(props: SideBarProps) {
     const { items } = props;
     const [expanded, setExpanded] = React.useState<string | false>(items[0].label);
     
-    const handleChange = useCallback(
+    const handleExpandChange = useCallback(
         (panel: string) => 
-            (event: React.SyntheticEvent, newExpanded: boolean) => 
-                setExpanded(newExpanded ? panel : false),
+            (event: React.SyntheticEvent, newExpanded: boolean) => {
+                setExpanded(newExpanded ? panel : false)
+            },
         [setExpanded]
     );
 
@@ -32,18 +33,18 @@ export default function SideBar(props: SideBarProps) {
                                 ...item, 
                                 ...{
                                     expanded, 
-                                    onChange: handleChange(item.label)
+                                    handleExpandChange: handleExpandChange(item.label)
                                 }
                             }} 
                             key={item.label}
                             />
                     } 
                     else if (isInternalLink(item)) {
-                        return <InternalLink {...item} key={item.label}/>
+                        return <InternalLink {...item} key={item.label} handleExpandChange={handleExpandChange(item.label)}/>
                     } else if (isExternalLink(item)) {
-                        return <ExternalLink {...item} key={item.label}/>
+                        return <ExternalLink {...item} key={item.label} handleExpandChange={handleExpandChange(item.label)}/>
                     }
-                    else return <DefaultSidBarItem {...item} key={item.label}/>
+                    else return <DefaultSidBarItem {...item} key={item.label} handleExpandChange={handleExpandChange(item.label)}/>
             })}
             </List>
         </div>

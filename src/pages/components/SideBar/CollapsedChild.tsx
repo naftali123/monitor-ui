@@ -6,6 +6,7 @@ import MuiAccordionSummary, { AccordionSummaryProps } from '@mui/material/Accord
 import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import { SideBarItemProps } from './SideBarItemProps';
+import { NonStyledLink } from './NonStyledLink';
 
 const Accordion = styled((props: AccordionProps) => (
     <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -40,23 +41,31 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
     // borderTop: '1px solid rgba(0, 0, 0, .125)',
 }));
 
+function SummaryWrapper({ label }: { label: string }) {
+    return <AccordionSummary aria-controls={`panel-${label}-content`} id={`panel-${label}-header`}>
+        <Typography>{label}</Typography>
+    </AccordionSummary>;
+}
+
 export interface CollapsedChildProps extends SideBarItemProps {
     expanded: string | boolean;
     children: React.ReactNode;
-    onChange?: ((event: React.SyntheticEvent<Element, Event>, expanded: boolean) => void) | undefined;
+    onClick?: ((event: React.MouseEvent<Element, MouseEvent>) => void) | undefined;
 }
 
 export function isCollapsedChild(item: SideBarItemProps): item is CollapsedChildProps {
     return 'children' in item && 'expanded' in item;
 }
+
 export function CollapsedChild(props: CollapsedChildProps) {
-    const { label, children, expanded, onChange } = props;
+    const { label, children, expanded, handleExpandChange, onClick, to } = props;
 
     return (
-        <Accordion expanded={expanded === label} onChange={onChange}>
-            <AccordionSummary aria-controls={`panel-${label}-content`} id={`panel-${label}-header`}>
-                <Typography>{label}</Typography>
-            </AccordionSummary>
+        <Accordion expanded={expanded === label} onChange={handleExpandChange} onClick={onClick}>
+            { to 
+                ? <NonStyledLink to={to}><SummaryWrapper label={label} /></NonStyledLink>
+                : <SummaryWrapper label={label} />
+            }
             <AccordionDetails>
                 {children}
             </AccordionDetails>

@@ -30,7 +30,7 @@ const onPress = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
 };
 
 export function InternalLink(props: InternalLinkProps) {
-    const { secondaryAction, id, label } = props;
+    const { secondaryAction, id, label, handleExpandChange } = props;
     return (
         <ListItem disablePadding secondaryAction={secondaryAction}>
             <ListItemText primary={<Grid
@@ -41,7 +41,10 @@ export function InternalLink(props: InternalLinkProps) {
             >
                 <Grid item xs>
                     <ListItemButton
-                        onClick={(e) => onPress(e)}
+                        onClick={(e) => {
+                            onPress(e);
+                            handleExpandChange!(e, false);
+                        }}
                         component={Link}
                         to={`#${id}`}
                     >

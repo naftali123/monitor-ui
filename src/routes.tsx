@@ -11,7 +11,7 @@ export const routesList = [
     element: <Home/>
   },
   { 
-    path: "/monitor", 
+    path: "/monitor/*", 
     name: "Monitor",
     element: <Monitor/> 
   },
