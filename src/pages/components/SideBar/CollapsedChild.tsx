@@ -7,6 +7,7 @@ import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import { SideBarItemProps } from './SideBarItemProps';
 import { NonStyledLink } from './NonStyledLink';
+import { ListItemButton, ListItemText } from '@mui/material';
 
 const Accordion = styled((props: AccordionProps) => (
     <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -58,10 +59,11 @@ export function isCollapsedChild(item: SideBarItemProps): item is CollapsedChild
 }
 
 export function CollapsedChild(props: CollapsedChildProps) {
-    const { label, children, expanded, handleExpandChange, onClick, to } = props;
+    const { label, children, expanded, handleExpandChange, onClick, to, disabled,...rest } = props;
 
-    return (
-        <Accordion expanded={expanded === label} onChange={handleExpandChange} onClick={onClick}>
+    return (disabled
+        ? <ListItemButton disabled><ListItemText primary={label} /></ListItemButton>
+        : <Accordion {...rest} expanded={expanded === label} onChange={handleExpandChange} onClick={onClick}>
             { to 
                 ? <NonStyledLink to={to}><SummaryWrapper label={label} /></NonStyledLink>
                 : <SummaryWrapper label={label} />

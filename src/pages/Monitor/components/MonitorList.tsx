@@ -7,7 +7,7 @@ import { MonitorMenu } from './MonitorMenu';
 
 export function MonitorList() {
   const status = useSelector((state: RootState) => state.monitor.status);
-  const subscriptions: Url[] = useSelector((state: RootState) => state.monitor.subscriptions);
+  const urls: Url[] = useSelector((state: RootState) => state.monitor.urls);
   const onPress = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     e.preventDefault();
     const target = window.document.getElementById(
@@ -28,7 +28,7 @@ export function MonitorList() {
     <List style={{ paddingTop: 0, paddingBottom: 0 }}>
       {status === 'loading'
         ? <ListItem disablePadding><ListItemText><CircularProgress /></ListItemText></ListItem>
-        : subscriptions.map((url: Url) => (
+        : urls.map((url: Url) => (
           <ListItem key={url.appId} disablePadding secondaryAction={ <MonitorMenu url={url}/> }>
             <ListItemText primary={
               <Grid 

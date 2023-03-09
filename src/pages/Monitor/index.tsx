@@ -18,7 +18,7 @@ function Monitor() {
   const dispatch = useAppDispatch();
   const serverErrorMessages = useAppSelector((state: RootState) => state.monitor.serverErrorMessages);
   const status = useSelector((state: RootState) => state.monitor.status);
-  const sumUrls: number = useSelector((state: RootState) => state.monitor.subscriptions.length);
+  const sumUrls: number = useSelector((state: RootState) => state.monitor.urls.length);
 
 
   const [ openForm, setOpenForm ] = useState(false);
@@ -69,12 +69,13 @@ function Monitor() {
             },
             {
               label: "Monitor urls",
-              to: "monitor/test",
+              to: "test",
             },
             {
+              disabled: sumUrls === 0,
               label: "View all",
               expanded: true,
-              to: "monitor/view-all",
+              to: "view-all",
               children: <MonitorList />
             }
           ]}            
@@ -84,15 +85,15 @@ function Monitor() {
           
           <Grid item xs={12} sm={12}>
             <Routes location={state?.backgroundLocation || location}>
-              <Route path="monitor/" element={
+              <Route path="/" element={
                 sumUrls === 0 && <FirstTimeMessage handleClickOpenForm={handleClickOpenForm}/>
               }/>
-              <Route index path="monitor/test" element={
+              <Route index path="/test" element={
                 <>
                   test
                 </>
               } />
-              <Route path="monitor/view-all" element={<ActivitiesCharts />} />
+              <Route path="/view-all" element={<ActivitiesCharts />} />
             </Routes>
           </Grid>
 

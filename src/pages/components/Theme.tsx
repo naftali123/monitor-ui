@@ -100,8 +100,8 @@ export default function CustomTheme({
 
                         <Box sx={{ flexGrow: 1, display: { md: 'flex' }, maxWidth: "70%", marginLeft: '15%', marginRight: '15%' }}>
                             <NavBarLinks pages={
-                                routesList.filter((r)=>r.path !== '/').map((route) => ({
-                                    to: route.path,
+                                routesList.filter((r)=>r.to !== '/').map((route) => ({
+                                    to: route.to,
                                     label: route.name
                                 }))
                             }/>

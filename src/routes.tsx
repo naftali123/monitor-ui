@@ -8,10 +8,12 @@ export const routesList = [
   { 
     path: "/", 
     name: "Home",
+    to: "/",
     element: <Home/>
   },
   { 
     path: "/monitor/*", 
+    to: "/monitor",
     name: "Monitor",
     element: <Monitor/> 
   },

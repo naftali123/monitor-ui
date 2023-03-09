@@ -30,9 +30,9 @@ const onPress = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
 };
 
 export function InternalLink(props: InternalLinkProps) {
-    const { secondaryAction, id, label, handleExpandChange } = props;
+    const { secondaryAction, id, label, handleExpandChange, ...rest } = props;
     return (
-        <ListItem disablePadding secondaryAction={secondaryAction}>
+        <ListItem {...rest} disablePadding secondaryAction={secondaryAction}>
             <ListItemText primary={<Grid
                 container
                 direction="row"

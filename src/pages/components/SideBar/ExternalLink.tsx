@@ -10,9 +10,9 @@ export function isExternalLink(item: SideBarItemProps): item is ExternalLinkProp
 }
 
 export function ExternalLink(props: ExternalLinkProps): JSX.Element {
-    const { label, link } = props;
+    const { label, link, ...rest } = props;
     return <ListItem key={label} disablePadding>
-        <ListItemText primary={<Grid
+        <ListItemText {...rest} primary={<Grid
             container
             direction="row"
             justifyContent="space-between"

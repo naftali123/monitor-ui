@@ -43,8 +43,8 @@ export default function SideBar(props: SideBarProps) {
                         return <InternalLink {...item} key={item.label} handleExpandChange={handleExpandChange(item.label)}/>
                     } else if (isExternalLink(item)) {
                         return <ExternalLink {...item} key={item.label} handleExpandChange={handleExpandChange(item.label)}/>
-                    }
-                    else return <DefaultSidBarItem {...item} key={item.label} handleExpandChange={handleExpandChange(item.label)}/>
+                    } 
+                    return <DefaultSidBarItem {...item} key={item.label} handleExpandChange={handleExpandChange(item.label)}/>
             })}
             </List>
         </div>

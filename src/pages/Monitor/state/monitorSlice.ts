@@ -9,13 +9,13 @@ import { MONITOR_DOMAIN, MONITOR_DOMAIN_DEFAULT_PORT } from './config';
 import { MonitorAPI } from './monitorAPI';
 
 export interface MonitorState {
-  subscriptions: Url[];
+  urls: Url[];
   status: 'idle' | 'loading' | 'success' | 'failed' | 'unavailable';
   serverErrorMessages: string[];
 }
 
 const initialState: MonitorState = {
-  subscriptions: [],
+  urls: [],
   status: 'idle',
   serverErrorMessages: [],
 };
@@ -82,7 +82,7 @@ export const monitorSlice = createSlice({
       state.serverErrorMessages = [];
     },
     activitiesUpdated: (state, action) => {
-      const url = state.subscriptions.find((url) => url.label === action.payload.label);
+      const url = state.urls.find((url) => url.label === action.payload.label);
       if (url) {
         url.activityHistory.push(action.payload);
         if (url.activityHistory.length > 20) {
@@ -100,7 +100,7 @@ export const monitorSlice = createSlice({
       .addCase(getAllUrls.fulfilled, (state, action) => {
         state.status = 'success';
         if (Array.isArray(action.payload)) {
-          state.subscriptions = (action.payload as Url[]).map((url) => Url.fromJson(url));
+          state.urls = (action.payload as Url[]).map((url) => Url.fromJson(url));
         }
         else {
           console.error('Error getAllUrls: ', action.payload);
@@ -118,7 +118,7 @@ export const monitorSlice = createSlice({
       .addCase(addUrl.fulfilled, (state, action) => {
         state.status = 'success';
         if (typeof action.payload !== 'string') {
-          state.subscriptions.push(Url.fromJson(action.payload));
+          state.urls.push(Url.fromJson(action.payload));
         }
         else {
           console.error('Error subscribing: ', action.payload);
@@ -135,7 +135,7 @@ export const monitorSlice = createSlice({
       .addCase(addUrlList.fulfilled, (state, action) => {
         state.status = 'success';
         if (Array.isArray(action.payload)) {
-          state.subscriptions = (action.payload as Url[]).filter((url) => typeof url !== 'string');
+          state.urls = (action.payload as Url[]).filter((url) => typeof url !== 'string');
           console.log('Already addUrl: ', (action.payload as string[]).filter((url) => typeof url === 'string'));
         }
         else {
@@ -152,7 +152,7 @@ export const monitorSlice = createSlice({
       .addCase(getActivityHistory.fulfilled, (state, action) => {
         state.status = 'success';
         if (Array.isArray(action.payload)) {
-          const url = state.subscriptions.find((url) => url.label === action.meta.arg);
+          const url = state.urls.find((url) => url.label === action.meta.arg);
           if (url) {
             url.activityHistory = action.payload;
           }
@@ -170,7 +170,7 @@ export const monitorSlice = createSlice({
       })
       .addCase(remove.fulfilled, (state, action) => {
         state.status = 'success';
-        state.subscriptions = state.subscriptions.filter((url) => url.url !== action.payload);
+        state.urls = state.urls.filter((url) => url.url !== action.payload);
       })
       .addCase(remove.rejected, (state) => {
         state.status = 'failed';
@@ -182,7 +182,7 @@ export const monitorSlice = createSlice({
       .addCase(removeList.fulfilled, (state, action) => {
         state.status = 'success';
         if (Array.isArray(action.payload)) {
-          state.subscriptions = state.subscriptions.filter((url) => !(action.payload as string[]).includes(url.label));
+          state.urls = state.urls.filter((url) => !(action.payload as string[]).includes(url.label));
           console.log('Already removed: ', (action.payload as string[]).filter((url) => typeof url === 'string'));
         }
         else {
