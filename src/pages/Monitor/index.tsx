@@ -68,14 +68,10 @@ function Monitor() {
               </ListItemButton>
             },
             {
-              label: "Monitor urls",
-              to: "test",
-            },
-            {
               disabled: sumUrls === 0,
-              label: "View all",
+              label: "Urls list",
               expanded: true,
-              to: "view-all",
+              to: "/monitor/",
               children: <MonitorList />
             }
           ]}            
@@ -86,14 +82,10 @@ function Monitor() {
           <Grid item xs={12} sm={12}>
             <Routes location={state?.backgroundLocation || location}>
               <Route path="/" element={
-                sumUrls === 0 && <FirstTimeMessage handleClickOpenForm={handleClickOpenForm}/>
+                sumUrls === 0 
+                ? <FirstTimeMessage handleClickOpenForm={handleClickOpenForm}/>
+                : <ActivitiesCharts />
               }/>
-              <Route index path="/test" element={
-                <>
-                  test
-                </>
-              } />
-              <Route path="/view-all" element={<ActivitiesCharts />} />
             </Routes>
           </Grid>
 
