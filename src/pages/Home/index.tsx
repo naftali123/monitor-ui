@@ -1,9 +1,9 @@
-import CustomTheme from "../components/Theme";
+import PrivateLayoutTheme from "../components/Theme/Layout/Private";
 
 function Home() {
     return (
-        <CustomTheme title="Home page">
-        </CustomTheme>
+        <PrivateLayoutTheme title="Home page">
+        </PrivateLayoutTheme>
     );
 }
 

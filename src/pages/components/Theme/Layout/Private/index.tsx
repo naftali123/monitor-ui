@@ -7,19 +7,14 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import MonitorHeartIcon from '@mui/icons-material/MonitorHeart';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/material/styles';
 import { InputBaseProps } from '@mui/material/InputBase/InputBase';
-import Footer from './Footer';
+import Footer from '../../Footer';
 import { Avatar, Chip, Grid, Paper } from '@mui/material';
-import CollapsedBreadcrumbs, { BreadcrumbsItem } from './CollapsedBreadcrumbs';
-import { routesList } from '../../routes';
-import { NavBarLinks } from './NavBarLinks';
-
-const theme = createTheme({
-    palette: {
-        mode: 'dark',
-    },
-});
+import CollapsedBreadcrumbs, { BreadcrumbsItem } from '../../CollapsedBreadcrumbs';
+import { routesList } from '../../../../../routes';
+import { NavBarLinks } from '../../NavBarLinks';
+import theme from '../../ThemeConfig';
 
 const drawerWidth = 240;
 
@@ -33,7 +28,7 @@ interface CustomThemeProps {
     breadcrumbsItems?: BreadcrumbsItem[],
 }
 
-export default function CustomTheme({ 
+export default function PrivateLayoutTheme({ 
     window, 
     title,
     children,

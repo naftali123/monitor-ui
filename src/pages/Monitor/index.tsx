@@ -4,7 +4,7 @@ import { getAllUrls } from './state/monitorSlice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { Grid, Link, ListItemButton, ListItemIcon, ListItemText, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import CustomTheme from '../components/Theme';
+import PrivateLayoutTheme from '../components/Theme/Layout/Private';
 import { RootState } from "../../app/store";
 import { ActivitiesCharts } from "./components/Activity/ActivitiesCharts";
 import { MonitorList } from "./components/MonitorList";
@@ -12,7 +12,13 @@ import SideBar from "../components/SideBar";
 import { ErrorModal } from "../components/Modal/ErrorModal";
 import { LoadingModal } from "../components/Modal/LoadingModal";
 import { MonitorForm } from "./components/From/MonitorForm";
-import { Route, Routes, useLocation, Outlet, Link as RouteLink } from "react-router-dom";
+import { 
+  Route,
+  Routes,
+  useLocation,
+  // Outlet,
+  // Link as RouteLink 
+} from "react-router-dom";
 
 function Monitor() {
   const dispatch = useAppDispatch();
@@ -53,7 +59,7 @@ function Monitor() {
   let state = location.state as { backgroundLocation?: Location };
 
   return (
-      <CustomTheme
+      <PrivateLayoutTheme
         title="Monitor"
         breadcrumbsItems={[{ label: "Monitor", to: "/monitor" }]}
         sideBar={ 
@@ -112,7 +118,7 @@ function Monitor() {
           onClose={function (): void {
             setLoadingModalOpen(false);
         }}/>
-      </CustomTheme>
+      </PrivateLayoutTheme>
   );
 }
 

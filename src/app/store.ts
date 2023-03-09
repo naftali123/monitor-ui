@@ -1,9 +1,11 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import monitorReducer from '../pages/Monitor/state/monitorSlice';
+import userReducer from '../pages/SignUp/state/userSlice';
 import { activityHistoryApi } from '../pages/Monitor/state/websocket';
 
 export const store = configureStore({
   reducer: {
+    user: userReducer,
     monitor: monitorReducer,
     [activityHistoryApi.reducerPath]: activityHistoryApi.reducer,
   },
