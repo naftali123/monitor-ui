@@ -3,9 +3,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { io } from 'socket.io-client'
 import { ActivityHistory } from "../types/ActivityHistory";
-import { MONITOR_DOMAIN, MONITOR_DOMAIN_DEFAULT_PORT } from './config'
+import { HOST, DEFAULT_PORT } from './config'
 
-const domain: string = `${MONITOR_DOMAIN}:${MONITOR_DOMAIN_DEFAULT_PORT}`;
+const domain: string = `${HOST}:${DEFAULT_PORT}`;
 
 const limit: number = 20;
 

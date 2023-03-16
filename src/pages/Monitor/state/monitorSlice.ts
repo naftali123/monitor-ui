@@ -5,7 +5,7 @@ import {
 
 import { Url } from "../types/Url";
 import { MonitorUrlRequest } from "../types/MonitorUrlRequest";
-import { MONITOR_DOMAIN, MONITOR_DOMAIN_DEFAULT_PORT } from './config';
+import { HOST, DEFAULT_PORT } from './config';
 import { MonitorAPI } from './monitorAPI';
 
 export interface MonitorState {
@@ -20,7 +20,7 @@ const initialState: MonitorState = {
   serverErrorMessages: [],
 };
 
-export const monitorAPI = new MonitorAPI(`http://${MONITOR_DOMAIN}:${MONITOR_DOMAIN_DEFAULT_PORT}`);
+export const monitorAPI = new MonitorAPI();
 
 export const getAllUrls = createAsyncThunk(
   'monitor/all-urls',

@@ -1,33 +1,31 @@
 import axios from 'axios';
 import { Url } from "../types/Url";
 import { MonitorUrlRequest } from "../types/MonitorUrlRequest";
+import { API, DEFAULT_PORT, HOST } from './config';
+import { HEADERS as headers } from './config';
 
 export class MonitorAPI {
   
-  constructor(public monitorServer: string) {}
+  constructor(
+    public host: string = `http://${HOST}:${DEFAULT_PORT}`,
+  ) {}
 
-  async addUrl(url: MonitorUrlRequest): Promise<(Url | string | string[])> {
+  async addUrl(data: MonitorUrlRequest): Promise<(Url | string | string[])> {
+    const url = `${this.host}${API.MONITOR.ADD_URL}`;
+    const method = 'POST';
     try {
-      const response = await axios({
-        url: `${this.monitorServer}/monitor/url`,
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        data: url,
-      });
+      const response = await axios({ url, method, headers, data });
       return (await response.data);
     } catch (error: any | unknown) {
+      console.error(`error at addUrl: ${url}`, error);
       throw new Error(JSON.stringify(error.response.data.message));
-      /// error.response.data.message || [];
-      // return error.response.data.message || [];
     }
   }
 
-  async addUrlList(urls: MonitorUrlRequest[]): Promise<(Url | string)[]> {
-    const response = await axios(`${this.monitorServer}/monitor/url-list`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      data: urls
-    });
+  async addUrlList(data: MonitorUrlRequest[]): Promise<(Url | string)[]> {
+    const url: string = `${this.host}${API.MONITOR.ADD_URL_LIST}`;
+    const method = 'POST';
+    const response = await axios({ url, method, headers, data });
     return (await response.data)
       .map(
         (url: any) => typeof url === 'string' 
@@ -36,35 +34,32 @@ export class MonitorAPI {
         );
   }
 
-  //http://localhost:3000/monitor/urls/activity-history/snapshotNode
   async getActivityHistory(label: string) {
-    const response = await axios.get(`${this.monitorServer}/monitor/urls/activity-history/${label}`);
+    const url = `${this.host}${API.MONITOR.GET_ACTIVITY_HISTORY.replace(':label', label)}`;
+    const method = 'GET';
+    const response = await axios({ url, method, headers });
     return (await response.data);
   }
 
-  async remove(url: string) {
-    const response = await axios({
-      url: `${this.monitorServer}/monitor`,
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      data: {url},
-    });
+  async remove(data: string) {
+    const url = `${this.host}${API.MONITOR.REMOVE_URL}`;
+    const method = 'DELETE';
+    const response = await axios({ url, method, headers, data: {url: data}});
     return (await response.data);
   }
 
   async removeList(urls: string[]) {
-    const response = await axios({
-      url: `${this.monitorServer}/monitor/list`,
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      data: {urls},
-    });
+    const url = `${this.host}${API.MONITOR.REMOVE_URL_LIST}`;
+    const method = 'DELETE';
+    const response = await axios({ url, method, headers, data: {urls}});
     return (await response.data);
   }
 
   async getAllUrls(): Promise<(Url | string)[]> {
     const limit = 20;
-    const response = await axios.get(`${this.monitorServer}/monitor/all-urls/${limit}`);
+    const url = `${this.host}${API.MONITOR.GET_ALL_URLS.replace(':limit', limit.toString())}`;
+    const method = 'GET';
+    const response = await axios({ url, method, headers });
     return (await response.data)
       .map(
         (url: any) => typeof url === 'string' 
