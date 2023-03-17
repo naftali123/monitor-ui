@@ -74,15 +74,8 @@ export const userSlice = createSlice({
         state.status = 'connected';
         state.user = action.meta.arg;
         state.access_token = action.payload;
-        
-        LSWrapper.setItem('auth@user', {
-          user: state.user,
-        });
-        
-        LSWrapper.setItem('auth@access_token', {
-          access_token: state.access_token
-        });
-
+        cache.setUser(state.user);
+        cache.setAccessToken(state.access_token);
       })
       .addCase(signUp.rejected, (state) => {
         state.status = 'failed';
@@ -95,13 +88,10 @@ export const userSlice = createSlice({
         if(action.payload){
           state.status = 'connected';
           state.access_token = action.payload;
-
-          LSWrapper.setItem('auth@access_token', {
-            access_token: state.access_token
-          });
+          cache.setAccessToken(state.access_token);
         }
         else {
-          // TODO throw error to user using alert modal or somthing like that
+          // TODO throw error to user using alert modal or something like that
           state.status = 'disconnected';
         }
       })
@@ -115,9 +105,11 @@ export const userSlice = createSlice({
   // setNewUser 
 // } = userSlice.actions;
 
-export const selectUser = (state: RootState) => state.user.user;
+export const selectUser = (state: RootState) => state.userReducer.user;
 
-export const selectStatus = (state: RootState) => state.user.status;
+export const selectAccessToken = (state: RootState) => state.userReducer.access_token;
+
+export const selectStatus = (state: RootState) => state.userReducer.status;
 
 // We can also write thunks by hand, which may contain both sync and async logic.
 // Here's an example of conditionally dispatching actions based on current state.

@@ -5,8 +5,8 @@ import { activityHistoryApi } from '../pages/Monitor/state/websocket';
 
 export const store = configureStore({
   reducer: {
-    user: userReducer,
-    monitor: monitorReducer,
+    userReducer: userReducer,
+    monitorReducer: monitorReducer,
     [activityHistoryApi.reducerPath]: activityHistoryApi.reducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware({  

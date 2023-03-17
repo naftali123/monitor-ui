@@ -6,8 +6,8 @@ import { Url } from "../types/Url";
 import { MonitorMenu } from './MonitorMenu';
 
 export function MonitorList() {
-  const status = useSelector((state: RootState) => state.monitor.status);
-  const urls: Url[] = useSelector((state: RootState) => state.monitor.urls);
+  const status = useSelector((state: RootState) => state.monitorReducer.status);
+  const urls: Url[] = useSelector((state: RootState) => state.monitorReducer.urls);
   const onPress = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     e.preventDefault();
     const target = window.document.getElementById(

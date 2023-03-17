@@ -12,11 +12,12 @@ import YupPassword from 'yup-password'
 import { AllowExtraEmails } from "../components/Form/AllowExtraEmails";
 import { Submit } from "../components/Form/Submit";
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { selectStatus, signUp } from './state/userSlice';
+import { selectStatus, selectUser, signUp } from './state/userSlice';
 // import { useNavigate } from 'react-router-dom';
 import PublicLayoutTheme from "../components/Theme/Layout/Public";
 import { SignUpRequest } from "./types/SignUpRequest";
 import { FirstName, LastName, Email, Password } from "../components/Form/CommonFields";
+import { User } from "./types/User";
 
 
 export type TitleH1Props = { text: string }
@@ -37,18 +38,19 @@ const schema = yup.object({
 }).required();
 
 export default function SignUp() {
-  
+  const user: User = useAppSelector(selectUser);
+  const defaultValues: FieldValues = {
+    firstName: user?.fname ?? '',
+    lastName: user?.lname ?? '',
+    email: user?.email ?? '',
+    password: user?.password ?? '',
+  };
   const { 
     control, 
     handleSubmit,
     formState: { errors, isValid }
   } = useForm({
-    defaultValues: {
-      firstName: '',
-      lastName: '',
-      email: '',
-      password: ''
-    },
+    defaultValues,
     resolver: yupResolver(schema)
   });
 

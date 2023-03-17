@@ -12,4 +12,9 @@ export default class UserCache extends LSWrapper {
     ) {
         super();
     }
+
+    setUser = (user: User)=>LSWrapper.setItem(this.userCacheKey, user);
+    
+    setAccessToken = (access_token: string)=>LSWrapper.setItem(this.access_tokenCacheKey, access_token);
+
 }

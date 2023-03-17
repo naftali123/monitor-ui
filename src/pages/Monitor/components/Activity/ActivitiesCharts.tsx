@@ -12,7 +12,7 @@ import { Url } from "../../types/Url";
 
 export function ActivitiesCharts() {
   const syncId = useMemo(() => Math.random().toString(36).substring(2), []);
-  const urls: Url[] = useSelector((state: RootState) => state.monitor.urls);
+  const urls: Url[] = useSelector((state: RootState) => state.monitorReducer.urls);
 
   // useEffect(() => {
   //   console.log('urls', urls);

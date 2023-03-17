@@ -22,9 +22,9 @@ import {
 
 function Monitor() {
   const dispatch = useAppDispatch();
-  const serverErrorMessages = useAppSelector((state: RootState) => state.monitor.serverErrorMessages);
-  const status = useSelector((state: RootState) => state.monitor.status);
-  const sumUrls: number = useSelector((state: RootState) => state.monitor.urls.length);
+  const serverErrorMessages = useAppSelector((state: RootState) => state.monitorReducer.serverErrorMessages);
+  const status = useSelector((state: RootState) => state.monitorReducer.status);
+  const sumUrls: number = useSelector((state: RootState) => state.monitorReducer.urls.length);
 
 
   const [ openForm, setOpenForm ] = useState(false);
