@@ -3,6 +3,6 @@ export type User = {
     lname: string;
     email: string;
     phone: string;
-    id: string;
+    // id: string;
     password: string;
 }

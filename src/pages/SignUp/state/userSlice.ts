@@ -11,18 +11,22 @@ import { User } from '../types/User';
 import { SignInRequest } from '../types/SignInRequest';
 import { UserApi } from './api';
 import { SignUpRequest } from '../types/SignUpRequest';
+import { LSWrapper } from '../../../services';
+import UserCache from '../cache';
 
 const { 
   // fetchUserById, 
   setNewUser, 
-  fetchUserByEmailAndPassword, 
-  cache
+  fetchUserByEmailAndPassword
 } = new UserApi();
 
 export interface UserState {
   user: User;
+  access_token?: string;
   status: 'disconnected' | 'loading' | 'failed' | 'connected';
 }
+
+const cache: UserCache = new UserCache();
 
 export const initialState: UserState = {
   user: cache.user != null ? cache.user : {
@@ -30,26 +34,21 @@ export const initialState: UserState = {
     fname: '',
     lname: '',
     phone: '',
-    id: '',
+    // id: '',
     password: ''
   },
-  status: cache.user!=null ? 'connected' : 'disconnected',
+  access_token: cache.access_token,
+  status: cache.user !=null && cache.access_token!=null ? 'connected' : 'disconnected',
 };
 
 export const signIn = createAsyncThunk(
   'user/get',
-  async ({ email, password }: SignInRequest) => {
-    const response = await fetchUserByEmailAndPassword(email, password);
-    return response.data;
-  }
+  async ({ email, password }: SignInRequest) => await fetchUserByEmailAndPassword(email, password)
 );
 
 export const signUp = createAsyncThunk(
   'user/set',
-  async (user: SignUpRequest) => {
-    const response = await setNewUser(user);
-    return response.data;
-  }
+  async (user: SignUpRequest) => await setNewUser(user)
 );
 
 export const userSlice = createSlice({
@@ -71,9 +70,19 @@ export const userSlice = createSlice({
       .addCase(signUp.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(signUp.fulfilled, (state, action: PayloadAction<User, string, { arg: SignUpRequest; requestId: string; requestStatus: "fulfilled"; }>) => {
+      .addCase(signUp.fulfilled, (state, action: PayloadAction<string, string, { arg: SignUpRequest; requestId: string; requestStatus: "fulfilled"; }>) => {
         state.status = 'connected';
-        state.user = action.payload;
+        state.user = action.meta.arg;
+        state.access_token = action.payload;
+        
+        LSWrapper.setItem('auth@user', {
+          user: state.user,
+        });
+        
+        LSWrapper.setItem('auth@access_token', {
+          access_token: state.access_token
+        });
+
       })
       .addCase(signUp.rejected, (state) => {
         state.status = 'failed';
@@ -85,7 +94,11 @@ export const userSlice = createSlice({
       .addCase(signIn.fulfilled, (state, action) => {
         if(action.payload){
           state.status = 'connected';
-          state.user = action.payload;
+          state.access_token = action.payload;
+
+          LSWrapper.setItem('auth@access_token', {
+            access_token: state.access_token
+          });
         }
         else {
           // TODO throw error to user using alert modal or somthing like that
