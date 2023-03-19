@@ -15,7 +15,7 @@ export class UserApi {
 
   setNewUser = async (data: SignUpRequest): Promise<string> => {
     try {
-      const url = `${this.host}${API.USER.SIGN_UP}`;
+      const url = `${this.host}${API.USER.LOCAL_SIGNUP}`;
       console.log('url', url);
       const method = 'POST';
       const response = await axios({ url, method, headers, data });
