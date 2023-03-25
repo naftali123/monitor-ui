@@ -32,9 +32,6 @@ export class UserApi {
   // fetchUserById = (id: string = '') => {}
 
   fetchUserByEmailAndPassword = async(email: string, password: string): Promise<string> => {
-    // return new Promise<{ data?: User }>((resolve) =>
-    //   setTimeout(() => resolve({ data: this.findByEmailAndPassword(email, password) }), this.randoWait())
-    // );
     return '';
   }
 }
