@@ -1,13 +1,13 @@
 import axios from 'axios';
 import { Url } from "../types/Url";
 import { MonitorUrlRequest } from "../types/MonitorUrlRequest";
-import { API, DEFAULT_PORT, HOST } from './config';
+import { API, DEFAULT_PORT, API_URL, HOST } from './config';
 import { HEADERS as headers } from './config';
 
 export class MonitorAPI {
   
   constructor(
-    public host: string = `http://${HOST}:${DEFAULT_PORT}`,
+    public host: string = `http://${HOST}:${DEFAULT_PORT}${API_URL}`,
   ) {}
 
   async addUrl(data: MonitorUrlRequest): Promise<(Url | string | string[])> {

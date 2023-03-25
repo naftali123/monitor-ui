@@ -3,16 +3,14 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { io } from 'socket.io-client'
 import { ActivityHistory } from "../types/ActivityHistory";
-import { HOST, DEFAULT_PORT } from './config'
-
-const domain: string = `${HOST}:${DEFAULT_PORT}`;
+import { HOST, DEFAULT_PORT, API_URL } from './config'
 
 const limit: number = 20;
 
-const socket = io(`http://${domain}`, {transports: ["websocket"]}).connect();
+const socket = io(`http://${HOST}:${8080}${API_URL}`, {transports: ["websocket"]}).connect();
 
 export const activityHistoryApi = createApi({
-    baseQuery: fetchBaseQuery({ baseUrl: `http://${domain}/monitor/urls/`}),
+    baseQuery: fetchBaseQuery({ baseUrl: `http://${HOST}:${DEFAULT_PORT}${API_URL}/monitor/urls/`}),
     endpoints: (build) => ({
         getActivities: build.query<ActivityHistory[], string>({
             query: (label) => `activity-history/${label}/${limit}`,
