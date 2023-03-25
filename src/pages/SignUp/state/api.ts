@@ -4,13 +4,14 @@ import {
   API,
   HEADERS as headers,
   HOST,
-  DEFAULT_PORT
+  DEFAULT_PORT,
+  API_URL
 } from './config';
 
 export class UserApi {
 
   constructor(
-    public host: string = `http://${HOST}:${DEFAULT_PORT}`
+    public host: string = `http://${HOST}:${DEFAULT_PORT}${API_URL}`
   ) { }
 
   setNewUser = async (data: SignUpRequest): Promise<string> => {
@@ -18,7 +19,7 @@ export class UserApi {
       const url = `${this.host}${API.USER.LOCAL_SIGNUP}`;
       console.log('url', url);
       const method = 'POST';
-      const response = await axios({ url, method, headers, data });
+      const response = await axios({ url, method, headers, data, withCredentials: true });
       const { access_token } = await response.data;
       return access_token;
     } catch (error: any | unknown) {
