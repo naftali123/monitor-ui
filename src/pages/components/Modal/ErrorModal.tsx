@@ -22,7 +22,7 @@ export function ErrorModal({ onClose, open, title, errorMessages }: ErrorModalPr
         <Box component="form" noValidate sx={{ mt: 3 }}>
           <Grid container spacing={2} maxWidth={"sm"}>
             <Grid item xs={12} sm={12}>
-              {errorMessages.length > 0 && errorMessages.map(
+              {errorMessages && Array.isArray(errorMessages) && errorMessages.length > 0 && errorMessages.map(
                 (msg, i) => <Grid key={i+msg} m={1}><Alert severity="error" variant="outlined">
                   <Typography color="error" variant="body2">
                     {msg}
