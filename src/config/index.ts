@@ -4,6 +4,7 @@ export {
     HOST,
     DEFAULT_PORT,
     API_URL,
+    WEB_SOCKET_PORT,
     HEADERS
 } from './api-server';
 
