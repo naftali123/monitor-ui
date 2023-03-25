@@ -5,7 +5,6 @@ import {
 
 import { Url } from "../types/Url";
 import { MonitorUrlRequest } from "../types/MonitorUrlRequest";
-import { HOST, DEFAULT_PORT } from './config';
 import { MonitorAPI } from './monitorAPI';
 
 export interface MonitorState {
